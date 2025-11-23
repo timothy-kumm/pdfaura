@@ -24,6 +24,7 @@ class FirebaseConfig {
              // Use Google Application Credentials if available, otherwise this might fail in local dev without setup
              val options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.getApplicationDefault())
+                .setProjectId("pdfaura")
                 .build()
             return FirebaseApp.initializeApp(options)
         }

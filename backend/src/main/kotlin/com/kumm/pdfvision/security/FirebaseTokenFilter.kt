@@ -15,7 +15,9 @@ import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 
 @Component
-class FirebaseTokenFilter : OncePerRequestFilter() {
+class FirebaseTokenFilter(
+    private val userRepository: com.kumm.pdfvision.repository.UserRepository
+) : OncePerRequestFilter() {
 
     @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(
@@ -33,6 +35,22 @@ class FirebaseTokenFilter : OncePerRequestFilter() {
                 val decodedToken: FirebaseToken = FirebaseAuth.getInstance().verifyIdToken(token)
                 val uid = decodedToken.uid
 
+                // Check if user exists, if not create and save
+                if (!userRepository.existsById(uid)) {
+                    val email = decodedToken.email ?: ""
+                    val name = decodedToken.name
+                    val picture = decodedToken.picture
+
+                    val newUser = com.kumm.pdfvision.model.User(
+                        id = uid,
+                        email = email,
+                        displayName = name,
+                        photoUrl = picture
+                    )
+                    userRepository.save(newUser)
+                    logger.info("Registered new user: $uid ($email)")
+                }
+
                 val authentication = UsernamePasswordAuthenticationToken(
                     uid, null, listOf(SimpleGrantedAuthority("ROLE_USER"))
                 )
@@ -41,9 +59,8 @@ class FirebaseTokenFilter : OncePerRequestFilter() {
 
             } catch (e: Exception) {
                 // Token verification failed
-                // You might want to log this or set a specific response status
-                // For now, we just don't populate the SecurityContext
                 logger.error("Firebase token verification failed", e)
+                response.addHeader("X-Auth-Error", e.message)
             }
         }
 

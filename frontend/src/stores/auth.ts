@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { markRaw } from "vue";
 import {
   signOut,
   onAuthStateChanged,
@@ -7,6 +8,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@/firebase";
 import type { User } from "firebase/auth";
+import { apiClient } from "@/services/api";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -23,8 +25,13 @@ export const useAuthStore = defineStore("auth", {
       try {
         const provider = new GoogleAuthProvider();
         const userCredential = await signInWithPopup(auth, provider);
-        this.user = userCredential.user;
+        this.user = markRaw(userCredential.user);
+
+        const token = await this.user.getIdToken();
+        localStorage.setItem('authToken', token);
+
         this.isAuthenticated = true;
+        await this.syncUser();
       } catch (error: any) {
         this.authError = error.message;
         throw error;
@@ -39,6 +46,7 @@ export const useAuthStore = defineStore("auth", {
         await signOut(auth);
         this.user = null;
         this.isAuthenticated = false;
+        localStorage.removeItem('authToken');
       } catch (error: any) {
         this.authError = error.message;
         throw error;
@@ -49,17 +57,29 @@ export const useAuthStore = defineStore("auth", {
 
     async checkAuthState() {
       return new Promise<void>((resolve) => {
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
           if (user) {
-            this.user = user;
+            this.user = markRaw(user);
             this.isAuthenticated = true;
+            // Force token refresh to ensure we have a valid token
+            const token = await user.getIdToken(true);
+            localStorage.setItem('authToken', token);
           } else {
             this.user = null;
             this.isAuthenticated = false;
+            localStorage.removeItem('authToken');
           }
           resolve();
         });
       });
+    },
+
+    async syncUser() {
+      try {
+        await apiClient.get('/api/auth/me');
+      } catch (error) {
+        console.error("Failed to sync user", error);
+      }
     },
 
     clearError() {

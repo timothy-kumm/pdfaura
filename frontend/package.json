@@ -12,8 +12,7 @@
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "generate-api": "powershell -File scripts/generate-api.ps1",
-    "generate-api-local": "openapi-generator-cli generate -i ./openapi.json -g typescript-axios -o src/generated/api --additional-properties=supportsES6=true,npmName=@/generated/api"
+    "generate-api": "openapi-ts --client @hey-api/client-axios -i http://localhost:8080/api-docs -o src/generated/api"
   },
   "dependencies": {
     "@radix-icons/vue": "^1.0.0",
@@ -62,7 +61,8 @@
     "zod": "^3.25.50"
   },
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.14.0",
+    "@hey-api/client-axios": "^0.9.1",
+    "@hey-api/openapi-ts": "^0.88.0",
     "@types/node": "^20.14.5",
     "@typescript-eslint/eslint-plugin": "^8.33.0",
     "@typescript-eslint/parser": "^8.33.0",

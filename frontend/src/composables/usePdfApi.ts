@@ -1,7 +1,6 @@
 import { ref, Ref } from 'vue'
-import { PDFOperationsApi, type PdfTextElement } from '@/generated/api'
+import { uploadPdf, getPdfInfo, extractTextFromPdf, type PdfTextElement } from '@/generated/api'
 export type { PdfTextElement }
-import { apiConfig } from '@/services/api'
 
 export interface UsePdfApiReturn {
   loading: Ref<boolean>
@@ -14,17 +13,13 @@ export interface UsePdfApiReturn {
 export function usePdfApi(): UsePdfApiReturn {
   const loading = ref(false)
   const error = ref<string | null>(null)
-  const api = new PDFOperationsApi(apiConfig)
 
-  const uploadPdf = async (file: File) => {
+  const uploadPdfFn = async (file: File) => {
     loading.value = true
     error.value = null
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-
-      const response = await api.uploadPdf(file)
+      const response = await uploadPdf({ body: { file } })
       return response.data
     } catch (err: any) {
       error.value = err.message || 'Failed to upload PDF'
@@ -34,12 +29,12 @@ export function usePdfApi(): UsePdfApiReturn {
     }
   }
 
-  const getPdfInfo = async (id: string) => {
+  const getPdfInfoFn = async (id: string) => {
     loading.value = true
     error.value = null
 
     try {
-      const response = await api.getPdfInfo(id)
+      const response = await getPdfInfo({ path: { id } })
       return response.data
     } catch (err: any) {
       error.value = err.message || 'Failed to get PDF info'
@@ -49,12 +44,12 @@ export function usePdfApi(): UsePdfApiReturn {
     }
   }
 
-  const extractTextFromPdf = async (file: File): Promise<PdfTextElement[]> => {
+  const extractTextFromPdfFn = async (file: File): Promise<PdfTextElement[]> => {
     loading.value = true
     error.value = null
     try {
-      const response = await api.extractTextFromPdf(file);
-      return response.data;
+      const response = await extractTextFromPdf({ body: { file } });
+      return response.data || [];
     } catch (err: any) {
       error.value = err.message || 'Failed to extract text from PDF';
       throw err;
@@ -66,8 +61,8 @@ export function usePdfApi(): UsePdfApiReturn {
   return {
     loading,
     error,
-    uploadPdf,
-    getPdfInfo,
-    extractTextFromPdf,
+    uploadPdf: uploadPdfFn,
+    getPdfInfo: getPdfInfoFn,
+    extractTextFromPdf: extractTextFromPdfFn,
   }
 }

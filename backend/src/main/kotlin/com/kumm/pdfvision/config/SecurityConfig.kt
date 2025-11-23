@@ -31,7 +31,8 @@ class SecurityConfig(
                         "/actuator/**",
                         "/public/**"
                     ).permitAll()
-                    .anyRequest().authenticated()
+                    .requestMatchers("/api/**").authenticated()
+                    .anyRequest().permitAll()
             }
             .addFilterBefore(firebaseTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
 
