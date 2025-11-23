@@ -57,7 +57,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { resetPassword } from "aws-amplify/auth";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 const router = useRouter();
 const email = ref("");
@@ -71,9 +71,9 @@ const handleSubmit = async () => {
   successMessage.value = null;
 
   try {
-    await resetPassword({
-      username: email.value,
-    });
+    const auth = getAuth();
+    await sendPasswordResetEmail(auth, email.value);
+
     successMessage.value =
       "Password reset instructions have been sent to your email";
     setTimeout(() => {
