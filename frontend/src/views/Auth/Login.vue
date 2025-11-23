@@ -4,11 +4,11 @@
       <CardHeader>
         <CardTitle class="dark:text-white">Login</CardTitle>
         <CardDescription class="dark:text-neutral-400"
-          >Sign in to your account</CardDescription
+          >Sign in to your account using Google</CardDescription
         >
       </CardHeader>
       <CardContent>
-        <form @submit.prevent="handleSubmit" class="space-y-4">
+        <div class="space-y-4">
           <Alert
             v-if="authStore.authError"
             variant="destructive"
@@ -19,32 +19,11 @@
               formatErrorMessage(authStore.authError)
             }}</AlertDescription>
           </Alert>
-          <div class="space-y-2">
-            <Label for="email" class="dark:text-neutral-200"
-              >Email</Label
-            >
-            <Input
-              id="email"
-              v-model="form.email"
-              type="email"
-              :disabled="authStore.isLoading"
-              required
-            />
-          </div>
-          <div class="space-y-2">
-            <Label for="password" class="dark:text-neutral-200">Password</Label>
-            <Input
-              id="password"
-              v-model="form.password"
-              type="password"
-              :disabled="authStore.isLoading"
-              required
-            />
-          </div>
-          <Button type="submit" class="w-full" :disabled="authStore.isLoading">
-            {{ authStore.isLoading ? "Signing in..." : "Sign in" }}
+          <Button @click="handleGoogleLogin" class="w-full" :disabled="authStore.isLoading">
+            <svg class="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 381.5 512 244 512 109.8 512 0 402.2 0 261.8S109.8 11.6 244 11.6C308.8 11.6 362.2 35.4 402.4 72.4l-61.9 47.9c-22.9-21.5-54.8-34.7-90.5-34.7-72.7 0-132.1 59.5-132.1 132.1s59.4 132.1 132.1 132.1c76.1 0 124.5-52.1 128.8-97.1H244v-75.1h236.4c2.5 12.8 3.6 26.4 3.6 40.5z"></path></svg>
+            {{ authStore.isLoading ? "Signing in..." : "Sign in with Google" }}
           </Button>
-        </form>
+        </div>
       </CardContent>
       <CardFooter class="flex flex-col space-y-4">
         <div class="text-sm text-center dark:text-neutral-400">
@@ -56,21 +35,13 @@
             Sign up
           </RouterLink>
         </div>
-        <div class="text-sm text-center dark:text-neutral-400">
-          <RouterLink
-            to="/auth/forgot-password"
-            class="text-primary hover:underline dark:text-primary"
-          >
-            Forgot password?
-          </RouterLink>
-        </div>
       </CardFooter>
     </Card>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -83,29 +54,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 const router = useRouter();
 const authStore = useAuthStore();
-
-const form = reactive({
-  email: "",
-  password: "",
-});
 
 const showShake = ref(false);
 
 const formatErrorMessage = (error: string | null) => {
   if (!error) return "";
-  if (error.includes("auth/invalid-credential") || error.includes("auth/user-not-found") || error.includes("auth/wrong-password")) {
-    return "Invalid email or password. Please try again.";
+  if (error.includes("auth/popup-closed-by-user")) {
+    return "Login cancelled. Please try again.";
   }
-  if (error.includes("auth/invalid-email")) {
-    return "Please enter a valid email address.";
-  }
-  if (error.includes("auth/too-many-requests")) {
-    return "Too many attempts. Please try again later.";
+  if (error.includes("auth/account-exists-with-different-credential")) {
+    return "An account already exists with the same email address but different sign-in credentials.";
   }
   return "An unexpected error occurred. Please try again.";
 };
@@ -122,14 +83,14 @@ watch(
   }
 );
 
-const handleSubmit = async () => {
+const handleGoogleLogin = async () => {
   try {
-    await authStore.login(form.email, form.password);
+    await authStore.loginWithGoogle();
     if (authStore.isAuthenticated) {
-      router.push("/settings");
+      router.push("/dashboard");
     }
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Google login error:", error);
   }
 };
 </script>

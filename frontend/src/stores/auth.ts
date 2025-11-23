@@ -1,11 +1,9 @@
 import { defineStore } from "pinia";
 import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  sendEmailVerification,
-  applyActionCode,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import { auth } from "@/firebase";
 import type { User } from "firebase/auth";
@@ -19,37 +17,14 @@ export const useAuthStore = defineStore("auth", {
   }),
 
   actions: {
-    async login(email: string, password: string) {
+    async loginWithGoogle() {
       this.isLoading = true;
       this.authError = null;
       try {
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+        const provider = new GoogleAuthProvider();
+        const userCredential = await signInWithPopup(auth, provider);
         this.user = userCredential.user;
         this.isAuthenticated = true;
-      } catch (error: any) {
-        this.authError = error.message;
-        throw error;
-      } finally {
-        this.isLoading = false;
-      }
-    },
-
-    async register(email: string, password: string) {
-      this.isLoading = true;
-      this.authError = null;
-      try {
-        const userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-        this.user = userCredential.user;
-        await sendEmailVerification(this.user);
-        // You might want to automatically sign the user in or redirect to a verification pending page
       } catch (error: any) {
         this.authError = error.message;
         throw error;
@@ -85,38 +60,6 @@ export const useAuthStore = defineStore("auth", {
           resolve();
         });
       });
-    },
-
-    async verifyEmail(actionCode: string) {
-        this.isLoading = true;
-        this.authError = null;
-        try {
-            await applyActionCode(auth, actionCode);
-            // The user's email is now verified.
-            // You might want to update the user state or UI.
-        } catch (error: any) {
-            this.authError = error.message;
-            throw error;
-        } finally {
-            this.isLoading = false;
-        }
-    },
-
-    async resendVerificationEmail() {
-      this.isLoading = true;
-      this.authError = null;
-      try {
-        if (auth.currentUser) {
-          await sendEmailVerification(auth.currentUser);
-        } else {
-          throw new Error("No authenticated user to send verification email.");
-        }
-      } catch (error: any) {
-        this.authError = error.message;
-        throw error;
-      } finally {
-        this.isLoading = false;
-      }
     },
 
     clearError() {

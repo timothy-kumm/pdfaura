@@ -5,8 +5,6 @@ import Settings from "@/views/Settings/Settings.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import Login from "@/views/Auth/Login.vue";
 import Register from "@/views/Auth/Register.vue";
-import ForgotPassword from "@/views/Auth/ForgotPassword.vue";
-import VerifyRegistration from "@/views/Auth/VerifyRegistration.vue";
 import PdfEditor from "@/views/PdfEditor.vue";
 import { useAuthStore } from "@/stores/auth";
 
@@ -47,19 +45,6 @@ const router = createRouter({
       path: "/auth/register",
       name: "register",
       component: Register,
-      meta: { guestOnly: true },
-    },
-    {
-      path: "/auth/forgot-password",
-      name: "forgot-password",
-      component: ForgotPassword,
-      meta: { guestOnly: true },
-    },
-    {
-      path: "/auth/verify",
-      name: "verify-registration",
-      component: VerifyRegistration,
-      props: (route) => ({ username: route.query.username }),
       meta: { guestOnly: true },
     },
     {
