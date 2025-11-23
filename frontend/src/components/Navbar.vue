@@ -11,7 +11,7 @@
       :to="authStore.isAuthenticated ? '/dashboard' : '/'"
       class="font-bold text-lg flex items-center"
     >
-      MCBuild
+      PDFAura
     </router-link>
     <div class="flex items-center lg:hidden">
       <Sheet v-model:open="isOpen">
@@ -33,7 +33,7 @@
                   <ChevronsDown
                     class="bg-gradient-to-tr from-primary/70 via-primary to-primary/70 rounded-lg size-9 mr-2 border text-white"
                   />
-                  MCBuild
+                  PDFAura
                 </router-link>
               </SheetTitle>
             </SheetHeader>

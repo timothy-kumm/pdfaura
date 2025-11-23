@@ -1,19 +1,11 @@
 {
-  "name": "mcgen",
-  "description": "Minecraft Building Generator",
+  "name": "pdfaura-frontend",
+  "description": "PDF Editor",
   "version": "0.1.1",
   "author": {
     "name": "Timothy Kumm",
     "email": "kumm.timothy@gmail.com"
   },
-  "keywords": [
-    "minecraft",
-    "minecraft building",
-    "AI",
-    "artificial intelligence",
-    "KI",
-    "künstliche Intelligenz"
-  ],
   "type": "module",
   "private": true,
   "scripts": {
