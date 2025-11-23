@@ -4,12 +4,8 @@ import App from "./App.vue";
 import { createI18n } from "vue-i18n";
 import router from "./router";
 import "./assets/index.css";
-import { initializeAuth } from "./api";
 import englishMessages from "./i18n/englisch.json";
 import germanMessages from "./i18n/german.json";
-
-// Initialize AWS Authentication
-initializeAuth();
 
 // Get stored language preference or default to 'en'
 const storedLanguage = localStorage.getItem("language") || "en";

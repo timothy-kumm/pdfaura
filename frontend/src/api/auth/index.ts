@@ -21,7 +21,7 @@ export async function loginUser(
 }
 
 export async function registerUser(
-  username: string, // Not used in standard Firebase email/pass, keeping signature
+  _username: string, // Not used in standard Firebase email/pass, keeping signature
   password: string,
   email: string
 ): Promise<{ isSignUpComplete: boolean; nextStep: any }> {
@@ -53,7 +53,7 @@ export function getCurrentAuthUser(): Promise<User | null> {
   });
 }
 
-export async function changePassword(oldPassword: string, newPassword: string): Promise<void> {
+export async function changePassword(_oldPassword: string, newPassword: string): Promise<void> {
     const user = auth.currentUser;
     if (user) {
         // Firebase doesn't require old password for update, but re-authentication is recommended for sensitive operations.

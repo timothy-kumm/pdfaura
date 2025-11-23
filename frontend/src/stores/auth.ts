@@ -85,11 +85,8 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    async verifyRegistration(username: string, code: string) {
-      // Firebase typically handles verification via email link, not code input like Cognito.
-      // We might need to adjust this flow or just fake it for now if the UI expects it.
-      // Or we can say it's done.
-       console.warn("verifyRegistration not implemented for Firebase email/password flow directly");
+    async verifyRegistration(_username: string, _code: string) {
+       // Firebase handles verification differently. This is a stub to prevent errors if called.
        return { isSignUpComplete: true };
     },
 
@@ -132,8 +129,7 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
-    async resendSignUpCode(username: string) {
-       console.warn("resendSignUpCode not applicable for basic Firebase email/password");
+    async resendSignUpCode(_username: string) {
        return {};
     },
   },
