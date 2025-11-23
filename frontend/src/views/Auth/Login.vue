@@ -87,7 +87,7 @@ const handleGoogleLogin = async () => {
   try {
     await authStore.loginWithGoogle();
     if (authStore.isAuthenticated) {
-      router.push("/dashboard");
+      router.push("/");
     }
   } catch (error) {
     console.error("Google login error:", error);
