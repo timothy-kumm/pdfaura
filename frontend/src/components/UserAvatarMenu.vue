@@ -4,12 +4,12 @@
       <Button variant="ghost" class="relative size-8 rounded-full">
         <Avatar class="size-8">
           <AvatarImage
-            v-if="user?.attributes?.picture"
-            :src="user.attributes.picture"
+            v-if="user?.photoURL"
+            :src="user.photoURL"
             alt="Profile"
           />
           <AvatarFallback>
-            {{ getInitials(user?.username) }}
+            {{ getInitials(user) }}
           </AvatarFallback>
         </Avatar>
       </Button>
@@ -18,10 +18,10 @@
       <DropdownMenuLabel class="font-normal">
         <div class="flex flex-col space-y-1">
           <p class="text-sm font-medium leading-none">
-            {{ user?.username }}
+            {{ user?.displayName || user?.email }}
           </p>
-          <p class="text-xs leading-none text-muted-foreground">
-            {{ user?.attributes?.email }}
+          <p v-if="user?.email" class="text-xs leading-none text-muted-foreground">
+            {{ user?.email }}
           </p>
         </div>
       </DropdownMenuLabel>
@@ -50,34 +50,32 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LogOut, Settings } from "lucide-vue-next";
-
 import { useRouter } from 'vue-router';
+import type { User } from 'firebase/auth'; // Import Firebase User type
 
 const router = useRouter();
 
-interface User {
-  username?: string;
-  attributes?: {
-    picture?: string;
-    email?: string;
-  };
-}
-
 defineProps<{
-  user: User;
+  user: User | null; // Use Firebase User type
 }>();
 
 const emit = defineEmits<{
   logout: [];
 }>();
 
-const getInitials = (username?: string) => {
-  if (!username) return "U";
-  return username
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+const getInitials = (user: User | null) => {
+  if (!user) return "U";
+  if (user.displayName) {
+    return user.displayName
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase();
+  }
+  if (user.email) {
+    return user.email[0].toUpperCase();
+  }
+  return "U";
 };
 
 const onLogout = () => {

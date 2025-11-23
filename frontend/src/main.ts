@@ -6,6 +6,8 @@ import router from "./router";
 import "./assets/index.css";
 import englishMessages from "./i18n/englisch.json";
 import germanMessages from "./i18n/german.json";
+import { useAuthStore } from "./stores/auth";
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 // Get stored language preference or default to 'en'
 const storedLanguage = localStorage.getItem("language") || "en";
@@ -22,9 +24,14 @@ const i18n = createI18n({
 
 const app = createApp(App);
 const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate)
 
 app.use(i18n);
 app.use(pinia);
-app.use(router);
 
-app.mount("#app");
+
+const authStore = useAuthStore();
+authStore.checkAuthState().then(() => {
+  app.use(router);
+  app.mount("#app");
+});

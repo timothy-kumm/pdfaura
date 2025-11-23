@@ -16,18 +16,25 @@
               id="email"
               v-model="email"
               type="email"
-              :disabled="isLoading"
+              :disabled="authStore.isLoading"
               required
             />
           </div>
-          <div v-if="error" class="text-sm text-red-500">
-            {{ error }}
-          </div>
+          <Alert
+            v-if="authStore.authError"
+            variant="destructive"
+            :class="{ 'animate-shake': showShake }"
+          >
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{{
+              formatErrorMessage(authStore.authError)
+            }}</AlertDescription>
+          </Alert>
           <div v-if="successMessage" class="text-sm text-green-500">
             {{ successMessage }}
           </div>
-          <Button type="submit" class="w-full" :disabled="isLoading">
-            {{ isLoading ? "Sending reset link..." : "Send reset link" }}
+          <Button type="submit" class="w-full" :disabled="authStore.isLoading">
+            {{ authStore.isLoading ? "Sending reset link..." : "Send reset link" }}
           </Button>
         </form>
       </CardContent>
@@ -44,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import {
   Card,
@@ -58,31 +65,53 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import { useAuthStore } from "@/stores/auth";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const router = useRouter();
+const authStore = useAuthStore();
 const email = ref("");
-const isLoading = ref(false);
-const error = ref<string | null>(null);
 const successMessage = ref<string | null>(null);
+const showShake = ref(false);
+
+const formatErrorMessage = (error: string | null) => {
+  if (!error) return "";
+  if (error.includes("auth/user-not-found") || error.includes("auth/invalid-email")) {
+    return "No user found with that email address.";
+  }
+  return "Failed to send reset email. Please try again.";
+};
+
+watch(
+  () => authStore.authError,
+  (newError) => {
+    if (newError) {
+      showShake.value = true;
+      setTimeout(() => {
+        showShake.value = false;
+      }, 500);
+    }
+  }
+);
 
 const handleSubmit = async () => {
-  isLoading.value = true;
-  error.value = null;
+  authStore.isLoading = true;
+  authStore.authError = null;
   successMessage.value = null;
 
   try {
-    const auth = getAuth();
-    await sendPasswordResetEmail(auth, email.value);
+    const firebaseAuth = getAuth();
+    await sendPasswordResetEmail(firebaseAuth, email.value);
 
     successMessage.value =
       "Password reset instructions have been sent to your email";
     setTimeout(() => {
       router.push("/auth/login");
     }, 3000);
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : "An error occurred";
+  } catch (e: any) {
+    authStore.authError = e.message;
   } finally {
-    isLoading.value = false;
+    authStore.isLoading = false;
   }
 };
 </script>

@@ -2,7 +2,13 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import NotFound from "../views/NotFound.vue";
 import Settings from "@/views/Settings/Settings.vue";
+import Dashboard from "@/views/Dashboard.vue";
+import Login from "@/views/Auth/Login.vue";
+import Register from "@/views/Auth/Register.vue";
+import ForgotPassword from "@/views/Auth/ForgotPassword.vue";
+import VerifyRegistration from "@/views/Auth/VerifyRegistration.vue";
 import PdfEditor from "@/views/PdfEditor.vue";
+import { useAuthStore } from "@/stores/auth";
 
 declare module "vue-router" {
   interface RouteMeta {
@@ -26,6 +32,37 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/dashboard",
+      name: "dashboard",
+      component: Dashboard,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/auth/login",
+      name: "login",
+      component: Login,
+      meta: { guestOnly: true },
+    },
+    {
+      path: "/auth/register",
+      name: "register",
+      component: Register,
+      meta: { guestOnly: true },
+    },
+    {
+      path: "/auth/forgot-password",
+      name: "forgot-password",
+      component: ForgotPassword,
+      meta: { guestOnly: true },
+    },
+    {
+      path: "/auth/verify",
+      name: "verify-registration",
+      component: VerifyRegistration,
+      props: (route) => ({ username: route.query.username }),
+      meta: { guestOnly: true },
+    },
+    {
       path: "/:pathMatch(.*)*",
       name: "not-found",
       component: NotFound,
@@ -39,6 +76,19 @@ const router = createRouter({
   scrollBehavior() {
     return { top: 0 };
   },
+});
+
+router.beforeEach((to, _from, next) => {
+  const authStore = useAuthStore();
+  const isAuthenticated = authStore.isAuthenticated;
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next({ name: "login" });
+  } else if (to.meta.guestOnly && isAuthenticated) {
+    next({ name: "home" });
+  } else {
+    next();
+  }
 });
 
 export default router;

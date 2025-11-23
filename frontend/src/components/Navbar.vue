@@ -8,7 +8,7 @@
     }"
   >
     <router-link
-      :to="authStore.isAuthenticated ? '/dashboard' : '/'"
+      :to="authStore.isAuthenticated ? '/pdf-editor' : '/'"
       class="font-bold text-lg flex items-center"
     >
       PDFAura
@@ -27,7 +27,7 @@
             <SheetHeader class="mb-4 ml-4">
               <SheetTitle class="flex items-center">
                 <router-link
-                  :to="authStore.isAuthenticated ? '/create' : '/'"
+                  :to="authStore.isAuthenticated ? '/pdf-editor' : '/'"
                   class="flex items-center"
                 >
                   <ChevronsDown
@@ -39,86 +39,77 @@
             </SheetHeader>
 
             <div class="flex flex-col gap-4">
-              <Button
-                v-for="{ to, label } in routeList"
-                :key="label"
-                as-child
-                variant="ghost"
-                class="justify-start text-base"
-              >
-                <router-link @click="isOpen = false" :to="to">
-                  {{ label }}
-                </router-link>
-              </Button>
-              <template v-if="!authStore.isAuthenticated">
-                <Button
-                  as-child
-                  variant="ghost"
-                  class="justify-start text-base"
-                >
-                  <router-link @click="isOpen = false" to="/auth/login">
-                    Login
-                  </router-link>
-                </Button>
-                <Button
-                  as-child
-                  variant="ghost"
-                  class="justify-start text-base"
-                >
-                  <router-link @click="isOpen = false" to="/auth/register">
-                    Register
-                  </router-link>
-                </Button>
-              </template>
-              <Button
-                v-else
-                variant="ghost"
-                class="justify-start text-base"
-                @click="handleLogout"
-              >
-                Logout
-              </Button>
-            </div>
-          </div>
-
-          <SheetFooter class="flex-col sm:flex-col justify-start items-start">
-            <Separator class="mb-2" />
-            <ToggleTheme />
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
-    </div>
-
-    <NavigationMenu class="hidden lg:block">
-      <NavigationMenuList class="gap-4">
-        <NavigationMenuItem v-for="{ to, label } in routeList" :key="label">
-          <NavigationMenuLink asChild>
-            <Button as-child variant="ghost" class="justify-start text-base">
-              <router-link :to="to">
-                {{ label }}
-              </router-link>
-            </Button>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
-    <div class="hidden lg:flex items-center gap-4">
-      <ToggleTheme />
-      <template v-if="!authStore.isAuthenticated">
-        <div class="hidden lg:flex gap-4">
-          <Button as-child variant="ghost">
-            <router-link to="/auth/login">Login</router-link>
-          </Button>
-          <Button as-child variant="default">
-            <router-link to="/auth/register">Register</router-link>
-          </Button>
-        </div>
-      </template>
-      <div v-else class="hidden lg:block">
-        <UserAvatarMenu :user="authStore.currentUser" @logout="handleLogout" />
-      </div>
-    </div>
-  </header>
+                        <Button
+                          v-for="{ to, label } in routeList"
+                          :key="label"
+                          as-child
+                          variant="ghost"
+                          class="justify-start text-base"
+                        >
+                          <router-link @click="isOpen = false" :to="to">
+                            {{ label }}
+                          </router-link>
+                        </Button>
+                        <template v-if="!authStore.isAuthenticated">
+                          <Button as-child variant="ghost" class="justify-start text-base">
+                            <router-link @click="isOpen = false" to="/auth/login">
+                              Login
+                            </router-link>
+                          </Button>
+                          <Button as-child variant="ghost" class="justify-start text-base">
+                            <router-link @click="isOpen = false" to="/auth/register">
+                              Register
+                            </router-link>
+                          </Button>
+                        </template>
+                        <Button
+                          v-else
+                          variant="ghost"
+                          class="justify-start text-base"
+                          @click="handleLogout"
+                        >
+                          Logout
+                        </Button>
+                      </div>
+                    </div>
+              
+                    <SheetFooter class="flex-col sm:flex-col justify-start items-start">
+                      <Separator class="mb-2" />
+                      <ToggleTheme />
+                    </SheetFooter>
+                  </SheetContent>
+                </Sheet>
+              </div>
+              
+              <NavigationMenu class="hidden lg:block">
+                <NavigationMenuList class="gap-4">
+                  <NavigationMenuItem v-for="{ to, label } in routeList" :key="label">
+                    <NavigationMenuLink asChild>
+                      <Button as-child variant="ghost" class="justify-start text-base">
+                        <router-link :to="to">
+                          {{ label }}
+                        </router-link>
+                      </Button>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+              <div class="hidden lg:flex items-center gap-4">
+                <ToggleTheme />
+                <template v-if="!authStore.isAuthenticated">
+                  <div class="hidden lg:flex gap-4">
+                    <Button as-child variant="ghost">
+                      <router-link to="/auth/login">Login</router-link>
+                    </Button>
+                    <Button as-child variant="default">
+                      <router-link to="/auth/register">Register</router-link>
+                    </Button>
+                  </div>
+                </template>
+                <div v-else class="hidden lg:block">
+                  <UserAvatarMenu :user="authStore.user" @logout="handleLogout" />
+                </div>
+              </div>  </header>
 </template>
 
 <script lang="ts" setup>

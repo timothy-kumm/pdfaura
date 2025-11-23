@@ -14,20 +14,19 @@
             variant="destructive"
             :class="{ 'animate-shake': showShake }"
           >
-            <ExclamationTriangleIcon class="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{{
               formatErrorMessage(authStore.authError)
             }}</AlertDescription>
           </Alert>
           <div class="space-y-2">
-            <Label for="username" class="dark:text-neutral-200"
-              >Username / Email</Label
+            <Label for="email" class="dark:text-neutral-200"
+              >Email</Label
             >
             <Input
-              id="username"
-              v-model="form.username"
-              type="text"
+              id="email"
+              v-model="form.email"
+              type="email"
               :disabled="authStore.isLoading"
               required
             />
@@ -75,7 +74,6 @@ import { reactive, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { ExclamationTriangleIcon } from "@radix-icons/vue";
 import {
   Card,
   CardContent,
@@ -92,26 +90,24 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 const form = reactive({
-  username: "",
+  email: "",
   password: "",
 });
 
 const showShake = ref(false);
 
-const formatErrorMessage = (error: string) => {
-  if (error.includes("UserNotFoundException")) {
-    return "Username not found. Please check your credentials.";
+const formatErrorMessage = (error: string | null) => {
+  if (!error) return "";
+  if (error.includes("auth/invalid-credential") || error.includes("auth/user-not-found") || error.includes("auth/wrong-password")) {
+    return "Invalid email or password. Please try again.";
   }
-  if (error.includes("NotAuthorizedException")) {
-    return "Incorrect password. Please try again.";
+  if (error.includes("auth/invalid-email")) {
+    return "Please enter a valid email address.";
   }
-  if (error.includes("UserNotConfirmedException")) {
-    return "Account not verified. Please check your email for verification code.";
-  }
-  if (error.includes("LimitExceededException")) {
+  if (error.includes("auth/too-many-requests")) {
     return "Too many attempts. Please try again later.";
   }
-  return error;
+  return "An unexpected error occurred. Please try again.";
 };
 
 watch(
@@ -128,9 +124,9 @@ watch(
 
 const handleSubmit = async () => {
   try {
-    const { isSignedIn } = await authStore.login(form.username, form.password);
-    if (isSignedIn) {
-      router.push("/dashboard");
+    await authStore.login(form.email, form.password);
+    if (authStore.isAuthenticated) {
+      router.push("/settings");
     }
   } catch (error) {
     console.error("Login error:", error);

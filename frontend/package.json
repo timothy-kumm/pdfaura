@@ -46,6 +46,7 @@
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^4.4.168",
     "pinia": "^3.0.2",
+    "pinia-plugin-persistedstate": "^4.7.1",
     "radix-vue": "^1.9.7",
     "reka-ui": "^2.3.1",
     "shadcn-vue": "^2.2.0",
