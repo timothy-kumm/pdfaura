@@ -1,0 +1,117 @@
+{
+  "select_language": "Sprache",
+  "welcome": "Willkommen",
+  "home": "Startseite",
+  "about": "Über uns",
+  "services": "Dienstleistungen",
+  "contact": "Kontakt",
+  "testimonials": "Referenzen",
+  "team": "Team",
+  "showcase": {
+    "title": "Zeigen Sie Ihren Wert",
+    "description": "Heben Sie hervor, wie Ihr Produkt Kundenprobleme löst"
+  },
+  "trust": {
+    "title": "Vertrauen aufbauen",
+    "description": "Nutzt Social-Proof-Elemente, um Vertrauen und Glaubwürdigkeit zu schaffen"
+  },
+  "leads": {
+    "title": "Leads generieren",
+    "description": "Gestalten Sie Ihr Lead-Formular optisch ansprechend und strategisch"
+  },
+  "hero": {
+    "title": "Minecraft-Meisterwerke",
+    "title2": "durch KI-Blockmagie"
+  },
+  "features": {
+    "section": {
+      "subtitle": "Kernfunktionen",
+      "title": "Was unser Tool auszeichnet",
+      "description": "Entdecke eine einzigartige Kombination aus KI-gestützter Generierung und intuitiver Bearbeitung, um deine kreativen Ideen schnell und einfach in die Welt von Minecraft zu bringen."
+    },
+    "list": {
+      "ai_generation": {
+        "title": "KI-gestützte Text-zu-3D Generierung",
+        "description": "Beschreibe deine Vision einfach mit Worten, und unsere KI verwandelt sie präzise in ein erstes 3D-Modell."
+      },
+      "2d_to_3d": {
+        "title": "Von 2D-Bildern zu 3D-Objekten",
+        "description": "Lade deine Skizzen, Fotos oder jegliche 2D-Grafiken hoch und sieh zu, wie sie in dreidimensionale Strukturen konvertiert werden."
+      },
+      "model_editing": {
+        "title": "Intuitive 3D-Modellbearbeitung",
+        "description": "Passe Details, Formen und Größen deiner 3D-Modelle mühelos per Drag & Drop und einfachen Werkzeugen an."
+      },
+      "minecraft_export": {
+        "title": "Direkter Export als Minecraft-Bauplan",
+        "description": "Übertrage deine finalen Modelle mit nur einem Klick als spielbare Strukturen oder detaillierte Baupläne in deine Minecraft-Welt."
+      },
+      "easy_start": {
+        "title": "Einfacher Einstieg",
+        "description": "Erstelle beeindruckende 3D-Modelle für Minecraft, auch ganz ohne Vorkenntnisse in komplexer 3D-Software."
+      },
+      "design_styles": {
+        "title": "Vielfältige Design-Stile",
+        "description": "Experimentiere mit einer breiten Palette an Stilen – von realistisch bis fantastisch – um deine einzigartige Vision umzusetzen."
+      },
+      "benefits": {
+        "section": {
+          "title": "Vorteile",
+          "heading": "Vom Konzept zum Minecraft-Meisterwerk",
+          "description": "Unser Tool revolutioniert, wie du 3D-Modelle für Minecraft erstellst. Gib einfach einen Prompt ein oder lade ein 2D-Bild hoch, modifiziere das Ergebnis und sieh zu, wie es in deiner Minecraft-Welt lebendig wird."
+        },
+        "list": {
+          "from_idea": {
+            "title": "Von Idee zum 3D-Modell",
+            "description": "Verwandle Text-Prompts oder 2D-Bilder mühelos in detaillierte 3D-Modelle. Deine Vision wird greifbar."
+          },
+          "creative_freedom": {
+            "title": "Kreative Freiheit & Anpassung",
+            "description": "Modifiziere und verfeinere deine generierten 3D-Modelle intuitiv, um einzigartige Kreationen zu erschaffen."
+          },
+          "seamless_conversion": {
+            "title": "Nahtlos zu Minecraft-Bauten",
+            "description": "Konvertiere deine 3D-Designs mit Leichtigkeit direkt in beeindruckende und spielbare Minecraft-Strukturen."
+          },
+          "unique_worlds": {
+            "title": "Einzigartige Welten gestalten",
+            "description": "Erschaffe unverwechselbare Minecraft-Welten schneller als je zuvor und teile deine Meisterwerke mit der Community."
+          }
+        }
+      },
+      "community": {
+        "title": "Bereit der Community beizutreten?",
+        "description": "Tritt der Discord-Community bei! Vernetze dich und teile deine Kreationen. Klick hier und tauch ein!",
+        "button": "Discord beitreten"
+      }
+    },
+    "how_it_works": {
+      "section": {
+        "subtitle": "So funktioniert's",
+        "title": "In 4 Schritten zum Minecraft-Bauwerk"
+      },
+      "steps": {
+        "input": {
+          "badge": "1. EINGABE",
+          "title": "Starte mit deiner Idee",
+          "description": "Gib einen einfachen Text-Prompt ein oder lade ein 2D-Bild hoch. Das ist der Zündfunke für dein 3D-Modell."
+        },
+        "generation": {
+          "badge": "2. 3D-GENERIERUNG",
+          "title": "Automatische Modellerstellung",
+          "description": "Unsere KI analysiert deine Eingabe und verwandelt sie in Sekundenschnelle in ein erstes, detailliertes 3D-Modell."
+        },
+        "customization": {
+          "badge": "3. ANPASSUNG",
+          "title": "Verfeinere dein Design",
+          "description": "Nutze intuitive Werkzeuge, um das generierte 3D-Modell zu modifizieren, Details hinzuzufügen und es perfekt an deine Vision anzupassen."
+        },
+        "integration": {
+          "badge": "4. MINECRAFT-INTEGRATION",
+          "title": "Direkt in deine Welt",
+          "description": "Konvertiere dein fertiges 3D-Modell mit einem Klick in eine beeindruckende Minecraft-Struktur, bereit für dein Spiel."
+        }
+      }
+    }
+  }
+}
